@@ -1,0 +1,15 @@
+name: credit_card_validator
+description: A new Flutter package project.
+version: 0.0.1
+author: Tanner Davis <tannerdavisr@gmail.com>
+homepage: https://github.com/cholojuanito
+repository: https://github.com/cholojuanito/credit_card_validator
+issue_tracker: https://github.com/cholojuanito/credit_card_validator/issues
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+
+dev_dependencies:
+  test: ^1.5.3
