@@ -64,13 +64,20 @@ class CCNumValidationResults extends ValidationResults {
 
 /// [CreditCardValidator] helps with validating credit card numbers, expiration dates, and security codes.
 ///  It is meant to validate the credit card as the user is typing in the card information
-//
+/// This class is meant to be used as a mixin and is not inheritable
+///  For example:
+///     class CreditCardValidationBloc extends Object with CreditCardValidator
+/// Will allow access to the functions mentioned below
 ///  Exposes 3 public functions which can be used to validate different parts of the credit card
 ///     1) Card number - validated based on type of card, luhn validity & card number length
 ///     2) Expiration Date - validated based on the date being a valid string & not expiring more
 ///         than 'n' years in the future. 'n' defaults to 19 years.
 ///     3) Security code (CVV) - validates based on the length of the code in conjunction with the type of card
 class CreditCardValidator {
+  /// Private constructor
+  /// Makes this class not inheritable or extendable because it cannot be instantiated
+  CreditCardValidator._();
+
   /// Validates a credit card number that is passed in as a string
   /// The string may have spaces or hyphens but no letters
   CCNumValidationResults validateCCNum(String ccNumStr) {
