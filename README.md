@@ -7,7 +7,7 @@ A Dart package that validates credit card numbers, expiration dates, and securit
     *Get the current version in the 'Installing' tab on pub.dartlang.org*
 ```
 dependencies:
-    credit_card_validator: ^1.0.0
+    credit_card_validator: *current-version*
 ```
 
 2. Import the package
@@ -20,8 +20,23 @@ A basic example
 ```
 import 'package:credit_card_validator/credit_card_validator.dart';
 
+class CreditCardValidationBloc with CreditCardValidator {
+    // Your wrapper class for validating credit cards that now has access to validation functions
+    // You can evaluate the results from the functions in your own functions inside this class
+}
 
 ```
+## Note:
+The `CreditCardValidator` class is meant to be used as a mixin and is not instantiable or extendable. 
+
+# Features
+* Supported cards:
+  * Visa
+  * Mastercard
+  * American Express
+  * Discover
+  * More to come!
+
 
 # Author
 Tanner Davis (Cholojuanito) - *Creator and repo owner* - [Github Profile](https://github.com/cholojuanito)

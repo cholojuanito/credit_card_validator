@@ -1,3 +1,11 @@
-## [0.0.1] - TODO: Add release date.
+## [0.0.1] - April 15, 2019
 
-* TODO: Describe initial release.
+* Initial release
+* Card number validation supported for:
+  * Visa
+  * American Express
+  * Discover
+  * MasterCard
+
+## Up next
+* Expiration date and security code coming soon
