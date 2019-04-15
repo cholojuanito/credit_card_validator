@@ -63,14 +63,19 @@ class CCNumValidationResults extends ValidationResults {
 }
 
 /// [CreditCardValidator] helps with validating credit card numbers, expiration dates, and security codes.
-///  It is meant to  validate the credit card as the user is typing in the card information
-// TODO coherent documentation
-///  Exposes 3
+///  It is meant to validate the credit card as the user is typing in the card information
+//
+///  Exposes 3 public functions which can be used to validate different parts of the credit card
+///     1) Card number - validated based on type of card, luhn validity & card number length
+///     2) Expiration Date - validated based on the date being a valid string & not expiring more
+///         than 'n' years in the future. 'n' defaults to 19 years.
+///     3) Security code (CVV) - validates based on the length of the code in conjunction with the type of card
 class CreditCardValidator {
-  ///
+  /// Validates a credit card number that is passed in as a string
+  /// The string may have spaces or hyphens but no letters
   CCNumValidationResults validateCCNum(String ccNumStr) {
-    // If the str is empty or contains any
-    if (ccNumStr.isEmpty) {
+    // If the str is empty or contains any letters
+    if (ccNumStr.isEmpty || ccNumStr.contains(RegExp(r'[a-zA-Z]'))) {
       return CCNumValidationResults(
         ccType: CreditCardType.unknown,
         isValid: false,
@@ -83,7 +88,7 @@ class CreditCardValidator {
 
     CreditCardType type = detectCCType(trimmedNumStr);
     // Card type couldn't be detected but it is still potentially valid
-    // TODO this needs to change because then any unknown card  could be potentially valid
+    // TODO change because then any unknown card  could be potentially valid
     if (type == CreditCardType.unknown) {
       return CCNumValidationResults(
         ccType: type,
@@ -103,12 +108,16 @@ class CreditCardValidator {
 
     bool isLuhnValid = false;
     bool isPotentiallyValid = false;
-    // Check Luhn validity
-    // TODO implement luhn checker
+
+    // Check Luhn validity of the number
+    isLuhnValid = _luhnValidity(trimmedNumStr);
 
     int maxCardLength = _ccNumLengths[type].reduce(max);
 
-    // TODO coherent comments
+    // Check if the card number length is viable.
+    // If it is then decide the potential validity of this card number
+    // The card number will be potentially valid if:
+    //    The number is luhn valid OR the card number isn't complete yet
     if (_ccNumLengths[type].contains(trimmedNumStr.length)) {
       isPotentiallyValid = isLuhnValid || trimmedNumStr.length < maxCardLength;
       return CCNumValidationResults(
@@ -127,15 +136,14 @@ class CreditCardValidator {
     );
   }
 
-  ///
-  ValidationResults validateExpDate(
-    String expDateStr, {
-    int maxYearsInFuture = DEFAULT_NUM_YEARS_IN_FUTURE,
-  }) {
+  /// Validates the card's expiration date based on the standard that no credit cards
+  ValidationResults validateExpDate(String expDateStr) {
     return null;
   }
 
-  ValidationResults validateSecurityCode() {
+  /// Validates the card's security code based on the card type.
+  ///  Default is 3 digits but Amex is the only card provider with security codes that are 4 digits
+  ValidationResults validateSecurityCode(String code) {
     return null;
   }
 
