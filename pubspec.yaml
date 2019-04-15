@@ -1,5 +1,5 @@
 name: credit_card_validator
-description: A new Flutter package project.
+description: A Dart package that validates credit card numbers, expiration dates, and security codes (CVV/CVC) based on the type of credit card
 version: 0.0.1
 author: Tanner Davis <tannerdavisr@gmail.com>
 homepage: https://github.com/cholojuanito
@@ -10,6 +10,7 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
+    credit_card_type_detector: ^1.0.1
 
 dev_dependencies:
   test: ^1.5.3
