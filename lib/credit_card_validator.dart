@@ -63,14 +63,26 @@ class CCNumValidationResults extends ValidationResults {
 }
 
 /// [CreditCardValidator] helps with validating credit card numbers, expiration dates, and security codes.
-///  It is meant to  validate the credit card as the user is typing in the card information
-// TODO coherent documentation
-///  Exposes 3
+///  It is meant to validate the credit card as the user is typing in the card information
+/// This class is meant to be used as a mixin and is not inheritable
+///  For example:
+///     class CreditCardValidationBloc extends Object with CreditCardValidator
+/// Will allow access to the functions mentioned below
+///  Exposes 3 public functions which can be used to validate different parts of the credit card
+///     1) Card number - validated based on type of card, luhn validity & card number length
+///     2) Expiration Date - validated based on the date being a valid string & not expiring more
+///         than 'n' years in the future. 'n' defaults to 19 years.
+///     3) Security code (CVV) - validates based on the length of the code in conjunction with the type of card
 class CreditCardValidator {
-  ///
+  /// Private constructor
+  /// Makes this class not inheritable or extendable because it cannot be instantiated
+  CreditCardValidator._();
+
+  /// Validates a credit card number that is passed in as a string
+  /// The string may have spaces or hyphens but no letters
   CCNumValidationResults validateCCNum(String ccNumStr) {
-    // If the str is empty or contains any
-    if (ccNumStr.isEmpty) {
+    // If the str is empty or contains any letters
+    if (ccNumStr.isEmpty || ccNumStr.contains(RegExp(r'[a-zA-Z]'))) {
       return CCNumValidationResults(
         ccType: CreditCardType.unknown,
         isValid: false,
@@ -83,7 +95,7 @@ class CreditCardValidator {
 
     CreditCardType type = detectCCType(trimmedNumStr);
     // Card type couldn't be detected but it is still potentially valid
-    // TODO this needs to change because then any unknown card  could be potentially valid
+    // TODO change because then any unknown card  could be potentially valid
     if (type == CreditCardType.unknown) {
       return CCNumValidationResults(
         ccType: type,
@@ -103,12 +115,16 @@ class CreditCardValidator {
 
     bool isLuhnValid = false;
     bool isPotentiallyValid = false;
-    // Check Luhn validity
-    // TODO implement luhn checker
+
+    // Check Luhn validity of the number
+    isLuhnValid = _luhnValidity(trimmedNumStr);
 
     int maxCardLength = _ccNumLengths[type].reduce(max);
 
-    // TODO coherent comments
+    // Check if the card number length is viable.
+    // If it is then decide the potential validity of this card number
+    // The card number will be potentially valid if:
+    //    The number is luhn valid OR the card number isn't complete yet
     if (_ccNumLengths[type].contains(trimmedNumStr.length)) {
       isPotentiallyValid = isLuhnValid || trimmedNumStr.length < maxCardLength;
       return CCNumValidationResults(
@@ -127,17 +143,43 @@ class CreditCardValidator {
     );
   }
 
+  /// Validates the card's expiration date based on the standard that no credit cards
+  ValidationResults validateExpDate(String expDateStr) {
+    return null;
+  }
+
+  /// Validates the card's security code based on the card type.
+  ///  Default is 3 digits but Amex is the only card provider with security codes that are 4 digits
+  ValidationResults validateSecurityCode(String code) {
+    return null;
+  }
+
+  /// Checks the validity of the card number using the Luhn algorithm (the modulus 10 algorithm)
+  ///  For more info on Luhn algorithm check these URLS
+  ///     https://en.wikipedia.org/wiki/Luhn_algorithm
+  ///     https://www.geeksforgeeks.org/luhn-algorithm
   ///
-  ValidationResults validateExpDate(
-    String expDateStr, {
-    int maxYearsInFuture = DEFAULT_NUM_YEARS_IN_FUTURE,
-  }) {
-    return null;
-  }
+  /// This method assumes that the incoming string is trimmed of whitespace
+  ///  and does not contain non-numerical characters. i.e.' -' or 'a-z'
+  bool _luhnValidity(String ccNum) {
+    int sum = 0;
+    bool alternate = false;
 
-  ValidationResults validateSecurityCode() {
-    return null;
-  }
+    for (int i = ccNum.length - 1; i >= 0; i--) {
+      int digit = int.parse(ccNum[i]);
 
-  bool _isLuhnValid() {}
+      if (alternate) {
+        digit *= 2;
+        if (digit > 9) {
+          digit = (digit % 10) + 1;
+        }
+      }
+
+      sum += digit;
+
+      alternate = !alternate;
+    }
+
+    return sum % 10 == 0;
+  }
 }
