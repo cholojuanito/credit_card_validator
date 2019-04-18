@@ -121,16 +121,17 @@ class CreditCardValidator {
   /// The string may have spaces or hyphens but no letters
   CCNumValidationResults validateCCNum(String ccNumStr) {
     // If the str is empty or contains any letters
-    if (ccNumStr.isEmpty || ccNumStr.contains(RegExp(r'[a-zA-Z]'))) {
+    if (ccNumStr.isEmpty || ccNumStr.contains(_alphaCharsRegex)) {
       return CCNumValidationResults(
         ccType: CreditCardType.unknown,
         isValid: false,
         isPotentiallyValid: false,
+        message: 'No input or contains alphabetic characters',
       );
     }
 
     // Replace any whitespace or hyphens
-    String trimmedNumStr = ccNumStr.replaceAll(RegExp(r'-|\s+\b|\b\s'), '');
+    String trimmedNumStr = ccNumStr.replaceAll(_whiteSpaceRegex, '');
 
     CreditCardType type = detectCCType(trimmedNumStr);
     // Card type couldn't be detected but it is still potentially valid
@@ -168,25 +169,91 @@ class CreditCardValidator {
     //    The number is luhn valid OR the card number isn't complete yet
     if (_ccNumLengths[type].contains(trimmedNumStr.length)) {
       isPotentiallyValid = isLuhnValid || trimmedNumStr.length < maxCardLength;
+
+      if (isLuhnValid && isPotentiallyValid) {
+        failedMessage = null;
+      }
+
       return CCNumValidationResults(
         ccType: type,
         isValid: isLuhnValid,
         isPotentiallyValid: isPotentiallyValid,
+        message: failedMessage,
       );
     }
 
+    bool potentialForMoreDigits = trimmedNumStr.length < maxCardLength;
+    if (potentialForMoreDigits) {
+      failedMessage = null;
+    }
     // Not a valid card but if the str passed in is 'incomplete' it is potentially valid
     // Incomplete means that the str passed in isn't as long as the max card length
     return CCNumValidationResults(
       ccType: type,
       isValid: false,
-      isPotentiallyValid: trimmedNumStr.length < maxCardLength,
+      isPotentiallyValid: potentialForMoreDigits,
+      message: failedMessage,
     );
   }
 
   /// Validates the card's expiration date based on the standard that no credit cards
   ValidationResults validateExpDate(String expDateStr) {
-    return null;
+    if (expDateStr == null || expDateStr.isEmpty) {
+      return ValidationResults(
+        isValid: false,
+        isPotentiallyValid: false,
+        message: 'No date given',
+      );
+    }
+
+    List<String> monthAndYear = _parseDate(expDateStr);
+    if (monthAndYear == null) {
+      return ValidationResults(
+        isValid: false,
+        isPotentiallyValid: true,
+        message: 'Invalid date format',
+      );
+    }
+
+    _ExpMonthValidationResults monthValidation =
+        _validateExpMonth(monthAndYear[0]);
+    _ExpYearValidationResults yearValidation =
+        _validateExpYear(monthAndYear[1]);
+
+    if (monthValidation.isValid) {
+      if (yearValidation.expiresThisYear) {
+        // If the card expires this year then tell whether or not it has expired already
+        return ValidationResults(
+          isValid: monthValidation.isValidForCurrentYear,
+          isPotentiallyValid: monthValidation.isValidForCurrentYear,
+          message: yearValidation
+              .message, // If year validation failed then this will be set
+        );
+      }
+
+      // Valid expiration date, all is well
+      if (yearValidation.isValid) {
+        return ValidationResults(
+          isValid: true,
+          isPotentiallyValid: true,
+        );
+      }
+    }
+
+    // Still a potentially valid expiration date
+    if (monthValidation.isPotentiallyValid &&
+        yearValidation.isPotentiallyValid) {
+      return ValidationResults(
+        isValid: false,
+        isPotentiallyValid: true,
+      );
+    }
+
+    return ValidationResults(
+      isValid: false,
+      isPotentiallyValid: false,
+      message: monthValidation.message,
+    );
   }
 
   /// Validates the card's security code based on the card type.
@@ -223,4 +290,124 @@ class CreditCardValidator {
 
     return sum % 10 == 0;
   }
+
+  _ExpYearValidationResults _validateExpYear(String expYearStr,
+      [int maxYearsInFuture]) {
+    int maxYearsTillExpiration = maxYearsInFuture != null
+        ? maxYearsInFuture
+        : DEFAULT_NUM_YEARS_IN_FUTURE;
+
+    int fourDigitCurrYear = DateTime.now().year;
+    String fourDigitCurrYearStr = fourDigitCurrYear.toString();
+    int expYear = int.parse(expYearStr);
+    bool isCurrYear = false;
+
+    if (expYearStr.length == 3) {
+      // The first 3 digits of a 4 digit year. i.e. 2022, we have the '202'
+      // This statement is reached when the user is typing in a full 4 digit year
+      int firstTwoDigits = int.parse(expYearStr.substring(0, 2));
+      int firstTwoDigitsCurrYear =
+          int.parse(fourDigitCurrYearStr.substring(0, 2));
+      return _ExpYearValidationResults(
+        isValid: false,
+        isPotentiallyValid: firstTwoDigits == firstTwoDigitsCurrYear,
+        expiresThisYear: isCurrYear,
+        message: 'Expiration year is 3 digits long',
+      );
+    }
+
+    if (expYearStr.length > 4) {
+      return _ExpYearValidationResults(
+        isValid: false,
+        isPotentiallyValid: false,
+        expiresThisYear: isCurrYear,
+        message: 'Expiration year is longer than 4 digits',
+      );
+    }
+
+    bool isValid = false;
+    String failedMessage =
+        'Expiration year either has passed already or is too far into the future';
+
+    if (expYearStr.length == 2) {
+      // Two digit year
+      int lastTwoDigitsCurrYear = int.parse(fourDigitCurrYearStr.substring(2));
+      isValid = (expYear >= lastTwoDigitsCurrYear &&
+          expYear <= lastTwoDigitsCurrYear + maxYearsTillExpiration);
+      isCurrYear = expYear == lastTwoDigitsCurrYear;
+    } else if (expYearStr.length == 4) {
+      // Four digit year
+      isValid = (expYear >= fourDigitCurrYear &&
+          expYear <= fourDigitCurrYear + maxYearsTillExpiration);
+      isCurrYear = expYear == fourDigitCurrYear;
+    }
+
+    if (isValid) {
+      failedMessage = null;
+    }
+
+    return _ExpYearValidationResults(
+      isValid: isValid,
+      isPotentiallyValid: isValid,
+      expiresThisYear: isCurrYear,
+      message: failedMessage,
+    );
+  }
+
+  _ExpMonthValidationResults _validateExpMonth(String expMonthStr) {
+    int currMonth = DateTime.now().month;
+    int expMonth = int.parse(expMonthStr);
+
+    bool isValid = expMonth > 0 && expMonth < 13;
+    bool isValidForThisYear = isValid && expMonth >= currMonth;
+
+    return _ExpMonthValidationResults(
+      isValid: isValid,
+      isPotentiallyValid: isValid,
+      isValidForCurrentYear: isValidForThisYear,
+    );
+  }
+
+  /// Parses the string form of the expiration date and returns the month and year
+  /// as a `List<String>`
+  ///
+  /// Allows for the following date formats:
+  ///     'MM/YY'
+  ///     'MM/YYY'
+  ///     'MM/YYYY'
+  ///
+  /// This function will replace hyphens with slashes for dates that have hyphens in them
+  /// and remove any whitespace
+  List<String> _parseDate(String expDateStr) {
+    // Replace hyphens with slashes and remove whitespaces
+    String formattedStr = expDateStr.replaceAll('-', '/')
+      ..replaceAll(_whiteSpaceRegex, '');
+
+    Match match = _expDateFormat.firstMatch(formattedStr);
+    if (match != null) {
+      print("matched! ${match[0]}");
+    } else {
+      return null;
+    }
+
+    List<String> monthAndYear = match[0].split('/');
+
+    return monthAndYear;
+  }
+
+  /// The regex for acceptable expiration date formats
+  /// In plain english the steps are:
+  ///       1) The month:
+  ///           a '0' followed by a number between '1' & '9 '
+  ///           OR
+  ///           a '1' followed by a number between '0' & '2'
+  ///       2) The slash:
+  ///            a '/' (forward slash)
+  ///       3) The year:
+  ///           any combo of 2-4 numeric characters
+  RegExp _expDateFormat = RegExp(r'((0[1-9])|(1[0-2]))(/)+(\d{2,4})');
+
+  RegExp _whiteSpaceRegex = RegExp(r'-|\s+\b|\b\s');
+
+  RegExp _alphaCharsRegex = RegExp(r'[a-zA-Z]');
 }
