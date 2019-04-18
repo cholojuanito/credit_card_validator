@@ -17,6 +17,8 @@ import 'package:credit_card_validator/credit_card_validator.dart';
 
 #  Usage
 A basic example
+### Note:
+The `CreditCardValidator` class is meant to be **used as a mixin and is not instantiable or extendable**. 
 ```
 import 'package:credit_card_validator/credit_card_validator.dart';
 
@@ -26,8 +28,6 @@ class CreditCardValidationBloc with CreditCardValidator {
 }
 
 ```
-## Note:
-The `CreditCardValidator` class is meant to be used as a mixin and is not instantiable or extendable. 
 
 # Features
 * Supported cards:
