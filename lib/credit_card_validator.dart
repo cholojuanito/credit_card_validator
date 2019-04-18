@@ -39,9 +39,14 @@ class ValidationResults {
   /// Whether or not the part of the card in question has the potential to be valid
   bool isPotentiallyValid;
 
+  /// A message that contains the reason why the validation failed
+  /// NOTE: This will only be present if both `isValid` and `isPotentiallyValid` are false
+  String message;
+
   ValidationResults({
     this.isValid,
     this.isPotentiallyValid,
+    this.message,
   });
 }
 
@@ -56,9 +61,43 @@ class CCNumValidationResults extends ValidationResults {
     this.ccType,
     bool isValid,
     bool isPotentiallyValid,
+    String message,
   }) : super(
           isValid: isValid,
           isPotentiallyValid: isPotentiallyValid,
+          message: message,
+        );
+}
+
+class _ExpYearValidationResults extends ValidationResults {
+  /// Whether or not the card expires this year
+  bool expiresThisYear;
+
+  _ExpYearValidationResults({
+    this.expiresThisYear,
+    bool isValid,
+    bool isPotentiallyValid,
+    String message,
+  }) : super(
+          isValid: isValid,
+          isPotentiallyValid: isPotentiallyValid,
+          message: message,
+        );
+}
+
+class _ExpMonthValidationResults extends ValidationResults {
+  /// Whether or not the card is good if it expires this year
+  bool isValidForCurrentYear;
+
+  _ExpMonthValidationResults({
+    this.isValidForCurrentYear,
+    bool isValid,
+    bool isPotentiallyValid,
+    String message,
+  }) : super(
+          isValid: isValid,
+          isPotentiallyValid: isPotentiallyValid,
+          message: message,
         );
 }
 
@@ -110,11 +149,13 @@ class CreditCardValidator {
         ccType: type,
         isValid: false,
         isPotentiallyValid: false,
+        message: 'Card number is greater than 19 digits',
       );
     }
 
     bool isLuhnValid = false;
     bool isPotentiallyValid = false;
+    String failedMessage = 'Not a valid credit card number';
 
     // Check Luhn validity of the number
     isLuhnValid = _luhnValidity(trimmedNumStr);
