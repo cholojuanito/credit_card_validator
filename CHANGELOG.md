@@ -1,3 +1,14 @@
+## Up next
+* Security code validation and unit tests
+
+## [0.0.2] - April 18, 2019
+* Expiration date validation
+  * Allows for dates with the following formats:
+    * MM/YYYY
+    * MM/YYY *will only happen when the user is typing in a 4 digit year*
+    * MM/YY
+  * Also makes sure the expiration year isn't beyond a certain limit, default is 19
+
 ## [0.0.1] - April 15, 2019
 
 * Initial release
@@ -6,6 +17,3 @@
   * American Express
   * Discover
   * MasterCard
-
-## Up next
-* Expiration date and security code coming soon
