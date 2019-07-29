@@ -258,8 +258,36 @@ class CreditCardValidator {
 
   /// Validates the card's security code based on the card type.
   ///  Default is 3 digits but Amex is the only card provider with security codes that are 4 digits
-  ValidationResults validateSecurityCode(String code) {
-    return null;
+  ValidationResults validateSecurityCode(String code,
+      {CreditCardType type = CreditCardType.unknown}) {
+    if (code == null || code.isEmpty) {
+      return ValidationResults(
+        isValid: false,
+        isPotentiallyValid: false,
+        message: 'Empty security code string',
+      );
+    }
+
+    String trimmedCode = code.replaceAll(_alphaCharsRegex, '')
+      ..replaceAll(_whiteSpaceRegex, '');
+
+    // Set the correct security code length
+    int expectedCodeLength = type == CreditCardType.amex
+        ? ALT_SECURITY_CODE_LENGTH
+        : DEFAULT_SECURITY_CODE_LENGTH;
+
+    if (trimmedCode.length != expectedCodeLength) {
+      return ValidationResults(
+        isValid: false,
+        isPotentiallyValid: false,
+        message: 'The security code is not the right length',
+      );
+    }
+
+    return ValidationResults(
+      isValid: true,
+      isPotentiallyValid: true,
+    );
   }
 
   /// Checks the validity of the card number using the Luhn algorithm (the modulus 10 algorithm)
