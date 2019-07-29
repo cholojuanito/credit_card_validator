@@ -1,5 +1,8 @@
 ## Up next
-* Security code validation and unit tests
+* Unit tests
+
+## [0.1.0] - July 29, 2019
+* Security code validation
 
 ## [0.0.2] - April 18, 2019
 * Expiration date validation
