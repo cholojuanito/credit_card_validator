@@ -112,11 +112,7 @@ class _ExpMonthValidationResults extends ValidationResults {
 ///     2) Expiration Date - validated based on the date being a valid string & not expiring more
 ///         than 'n' years in the future. 'n' defaults to 19 years.
 ///     3) Security code (CVV) - validates based on the length of the code in conjunction with the type of card
-class CreditCardValidator {
-  /// Private constructor
-  /// Makes this class not inheritable or extendable because it cannot be instantiated
-  CreditCardValidator._();
-
+mixin CreditCardValidator {
   /// Validates a credit card number that is passed in as a string
   /// The string may have spaces or hyphens but no letters
   CCNumValidationResults validateCCNum(String ccNumStr) {
