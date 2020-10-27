@@ -2,6 +2,9 @@
 * Unit tests
 * Validate card holder name and postal codes
 
+## [1.0.1]
+* Added better usage example
+
 ## [1.0.0] - Oct 27, 2020
 * Finalized method and class declarations
 
