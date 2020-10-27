@@ -51,7 +51,7 @@ class CreditCardValidationBloc {
   * More to come!
 
 # Original Repo
-This lab is based off of [Braintree's Credit Card Validator JS package](https://github.com/braintree/card-validator)
+This package is based off of [Braintree's Credit Card Validator JS package](https://github.com/braintree/card-validator)
 
 # Author
 Tanner Davis (Cholojuanito) - *Creator and repo owner* - [Github Profile](https://github.com/cholojuanito)
