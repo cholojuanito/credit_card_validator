@@ -1,6 +1,6 @@
 name: credit_card_validator
 description: A Dart package that validates credit card numbers, expiration dates, and security codes (CVV/CVC) based on the type of credit card
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/cholojuanito
 repository: https://github.com/cholojuanito/credit_card_validator
 issue_tracker: https://github.com/cholojuanito/credit_card_validator/issues
