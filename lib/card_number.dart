@@ -66,7 +66,7 @@ const int DEFAULT_MAX_CARD_NUM_LENGTH = 19;
     // Check Luhn validity of the number
     isLuhnValid = checkLuhnValidity(trimmedNumStr);
 
-    int maxCardLength = ccNumLengths[type].reduce(max);
+    int maxCardLength = ccNumLengths.containsKey(type) ? ccNumLengths[type].reduce(max) : DEFAULT_MAX_CARD_NUM_LENGTH;
 
     // Check if the card number length is viable.
     // If it is then decide the potential validity of this card number
