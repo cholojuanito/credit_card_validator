@@ -2,7 +2,7 @@
 * Unit tests
 * "Validate" card holder name and postal codes
 
-## [1,1,0]
+## [1.1.0]
 * Fixed error that happened when validating card number of cards that are not supported
 
 ## [1.0.1]
