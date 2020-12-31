@@ -5,7 +5,10 @@ import 'validation_results.dart';
 
 /// The default number of years into the future a card is valid. Set to 19
 /// i.e. if the current year is 2019 then a valid card would not have an expiration date greater than 2038
-const int DEFAULT_NUM_YEARS_IN_FUTURE = 19;
+const int _DEFAULT_NUM_YEARS_IN_FUTURE = 19;
+
+String _DEFAULT_YEAR_FAIL_MESSAGE = 'Card has expired';
+String _DEFAULT_MONTH_FAIL_MESSAGE = 'Card has expired this year';
 
 /// Validates the card's expiration date based on the standard that no credit cards
   ValidationResults validateExpirationDate(String expDateStr) {
@@ -69,14 +72,27 @@ const int DEFAULT_NUM_YEARS_IN_FUTURE = 19;
 
   ExpYearValidationResults _validateExpYear(String expYearStr,
       [int maxYearsInFuture]) {
-    int maxYearsTillExpiration = maxYearsInFuture != null
-        ? maxYearsInFuture
-        : DEFAULT_NUM_YEARS_IN_FUTURE;
+
+    if (nonNumberRegex.hasMatch(expYearStr)) {
+        return ExpYearValidationResults(
+          isValid: false,
+          isPotentiallyValid: false,
+          expiresThisYear: false,
+          message: 'Must have only numbers in dates'
+      );
+    }
 
     int fourDigitCurrYear = DateTime.now().year;
     String fourDigitCurrYearStr = fourDigitCurrYear.toString();
     int expYear = int.parse(expYearStr);
-    bool isCurrYear = false;
+
+    if (expYearStr.length < 2) {
+      return ExpYearValidationResults(
+        isValid: false,
+        isPotentiallyValid: true,
+        expiresThisYear: false,
+      );
+    }
 
     if (expYearStr.length == 3) {
       // The first 3 digits of a 4 digit year. i.e. 2022, we have the '202'
@@ -87,8 +103,8 @@ const int DEFAULT_NUM_YEARS_IN_FUTURE = 19;
       return ExpYearValidationResults(
         isValid: false,
         isPotentiallyValid: firstTwoDigits == firstTwoDigitsCurrYear,
-        expiresThisYear: isCurrYear,
-        message: 'Expiration year is 3 digits long',
+        expiresThisYear: false,
+        message: firstTwoDigits != firstTwoDigitsCurrYear ? 'Expiration year is 3 digits long' : null,
       );
     }
 
@@ -96,14 +112,17 @@ const int DEFAULT_NUM_YEARS_IN_FUTURE = 19;
       return ExpYearValidationResults(
         isValid: false,
         isPotentiallyValid: false,
-        expiresThisYear: isCurrYear,
+        expiresThisYear: false,
         message: 'Expiration year is longer than 4 digits',
       );
     }
 
     bool isValid = false;
-    String failedMessage =
-        'Expiration year either has passed already or is too far into the future';
+    String failedMessage = _DEFAULT_YEAR_FAIL_MESSAGE;
+    bool isCurrYear = false;
+    int maxYearsTillExpiration = maxYearsInFuture != null
+        ? maxYearsInFuture
+        : _DEFAULT_NUM_YEARS_IN_FUTURE;
 
     if (expYearStr.length == 2) {
       // Two digit year
@@ -131,16 +150,32 @@ const int DEFAULT_NUM_YEARS_IN_FUTURE = 19;
   }
 
   ExpMonthValidationResults _validateExpMonth(String expMonthStr) {
+
+    if (nonNumberRegex.hasMatch(expMonthStr)) {
+        return ExpMonthValidationResults(
+          isValid: false,
+          isPotentiallyValid: false,
+          isValidForCurrentYear: false,
+          message: 'Must have only numbers in dates'
+      );
+    }
+
     int currMonth = DateTime.now().month;
     int expMonth = int.parse(expMonthStr);
 
     bool isValid = expMonth > 0 && expMonth < 13;
     bool isValidForThisYear = isValid && expMonth >= currMonth;
+    String failMessage = _DEFAULT_MONTH_FAIL_MESSAGE;
+
+    if (isValid && isValidForThisYear) {
+      failMessage = null;
+    }
 
     return ExpMonthValidationResults(
       isValid: isValid,
       isPotentiallyValid: isValid,
       isValidForCurrentYear: isValidForThisYear,
+      message: failMessage
     );
   }
 
