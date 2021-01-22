@@ -25,8 +25,8 @@ class CreditCardValidator {
     return validateExpirationDate(expDateStr.trim());
   }
 
-  ValidationResults validateCVV(String cvv, {CreditCardType cardType = CreditCardType.unknown}) {
-    return validateSecurityCode(cvv.trim(), type: cardType);
+  ValidationResults validateCVV(String cvv, CreditCardType cardType) {
+    return validateSecurityCode(cvv.trim(), cardType);
   }
 
 }
