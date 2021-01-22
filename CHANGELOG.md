@@ -1,6 +1,19 @@
 ## Up next
-* Unit tests
 * "Validate" card holder name and postal codes
+
+## [1.2.0]
+* Card type parameter is now **required** when validating security codes
+* More cards supported:
+  * Diners Club
+  * JCB
+  * Union Pay
+  * Maestro
+  * Mir
+  * Elo
+  * Hiper/Hipercard
+* Unit tests all setup and passing
+* Fixed expiration date regex
+* Added security code validation based on length
 
 ## [1.1.0]
 * Fixed error that happened when validating card number of cards that are not supported
