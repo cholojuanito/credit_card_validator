@@ -12,5 +12,5 @@ const int DEFAULT_MIN_POSTAL_CODE_LENGTH = 3;
 /// Checks if the postal code
 ValidationResults validatePostalCode(String postalCode, {int minLength}) {
   // TODO implement
-  return null;
+  throw UnimplementedError();
 }

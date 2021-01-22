@@ -15,29 +15,42 @@ const int ALT_SECURITY_CODE_LENGTH = 4;
 
 /// Validates the card's security code based on the card type.
   ///  Default is 3 digits but Amex is the only card provider with security codes that are 4 digits
-  ValidationResults validateSecurityCode(String code,
-      {CreditCardType type = CreditCardType.unknown}) {
-    if (code == null || code.isEmpty) {
+  ValidationResults validateSecurityCode(String code, CreditCardType type ) {
+    String trimmedCode = code.replaceAll(whiteSpaceRegex, '');
+
+    if (trimmedCode.isEmpty) {
       return ValidationResults(
         isValid: false,
         isPotentiallyValid: false,
-        message: 'Empty security code string',
+        message: 'No security code given',
       );
     }
 
-    String trimmedCode = code.replaceAll(alphaCharsRegex, '')
-      ..replaceAll(whiteSpaceRegex, '');
+    if (nonNumberRegex.hasMatch(trimmedCode)) {
+      return ValidationResults(
+        isValid: false,
+        isPotentiallyValid: false,
+        message: 'Alphabetic characters are not allowed',
+      );
+    }
 
     // Set the correct security code length
     int expectedCodeLength = type == CreditCardType.amex
         ? ALT_SECURITY_CODE_LENGTH
         : DEFAULT_SECURITY_CODE_LENGTH;
 
-    if (trimmedCode.length != expectedCodeLength) {
+    if (trimmedCode.length < expectedCodeLength) {
+      return ValidationResults(
+        isValid: false,
+        isPotentiallyValid: true,
+        message: 'Security code is too short for this card type',
+      );
+    }
+    else if (trimmedCode.length > expectedCodeLength) {
       return ValidationResults(
         isValid: false,
         isPotentiallyValid: false,
-        message: 'The security code is not the right length',
+        message: 'Security code is too long',
       );
     }
 

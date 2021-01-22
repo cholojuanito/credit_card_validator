@@ -3,7 +3,7 @@ A Dart package that validates credit card numbers, expiration dates, and securit
 
 This package should be used to quickly validate credit card data inputs and provide feedback to the user in your application's UI. It includes support for "potentially valid" inputs so that you can appropriately display the results to the user as they type.
 
-**This package does not verify the information with the user's bank or credit company. Please use a payment processing service like Stripe or Braintree for true verification and validation of the user's payment info.**
+**Important: This package does not verify the information with the user's bank or credit company. Please use a payment processing service like Stripe or Braintree for true verification and validation of the user's payment info.**
 
 # Installing
 1. Add dependency to `pubspec.yaml`
@@ -30,7 +30,7 @@ class CreditCardValidationBloc {
     bool validateCreditCardInfo(string ccNum, string expDate, string cvv, ...) {
         var ccNumResults = _ccValidator.validateCCNum(ccNum);
         var expDateResults = _ccValidator.validateExpDate(expDate);
-        var cvvResults = _ccValidator.validateCVV(cvv);
+        var cvvResults = _ccValidator.validateCVV(cvv, ccNumResults.ccType);
         ...
 
         if(ccNumResults.isPotentiallyValid) {
@@ -48,7 +48,13 @@ class CreditCardValidationBloc {
   * Mastercard
   * American Express
   * Discover
-  * More to come!
+  * Diners Club
+  * JCB
+  * Union Pay
+  * Maestro
+  * Mir
+  * Elo
+  * Hiper/Hipercard
 
 # Original Repo
 This package is based off of [Braintree's Credit Card Validator JS package](https://github.com/braintree/card-validator)
