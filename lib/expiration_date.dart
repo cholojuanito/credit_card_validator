@@ -24,8 +24,8 @@ ValidationResults validateExpirationDate(String expDateStr) {
   if (monthAndYear == null) {
     return ValidationResults(
       isValid: false,
-      isPotentiallyValid: true,
-      message: 'Invalid date format',
+      isPotentiallyValid: false,
+      message: 'Invalid date format or invalid dates',
     );
   }
 
