@@ -32,11 +32,18 @@ const int ALT_SECURITY_CODE_LENGTH = 4;
         ? ALT_SECURITY_CODE_LENGTH
         : DEFAULT_SECURITY_CODE_LENGTH;
 
-    if (trimmedCode.length != expectedCodeLength) {
+    if (trimmedCode.length < expectedCodeLength) {
+      return ValidationResults(
+        isValid: false,
+        isPotentiallyValid: true,
+        message: 'Security code is too short for this card type',
+      );
+    }
+    else if (trimmedCode.length > expectedCodeLength) {
       return ValidationResults(
         isValid: false,
         isPotentiallyValid: false,
-        message: 'The security code is not the right length for this card type',
+        message: 'Security code is too long',
       );
     }
 
