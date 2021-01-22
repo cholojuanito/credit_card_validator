@@ -38,7 +38,7 @@ const String _DEFAULT_FAIL_MESSAGE = 'Invalid credit card number';
 /// * `ccNumStr` (`String`): may have spaces or hyphens but no non-numeric characters
 /// * `luhnValidateUnionPay` (`bool`): determines if the UnionPay card's number should be checked for Luhn validity. 
 ///  Default is to not check since some UnionPay cards do not use the Luhn algorithm.
-  CCNumValidationResults validateCardNumber(String ccNumStr, 
+CCNumValidationResults validateCardNumber(String ccNumStr, 
   {bool luhnValidateUnionPay = false}) {
     // Replace any whitespace or hyphens
     String trimmedNumStr = ccNumStr.replaceAll(whiteSpaceRegex, '');
