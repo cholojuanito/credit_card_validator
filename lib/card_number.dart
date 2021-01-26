@@ -85,18 +85,18 @@ CCNumValidationResults validateCardNumber(String ccNumStr,
       isLuhnValid = checkLuhnValidity(trimmedNumStr);
     }
 
-    int maxCardLength = _ccNumLengths.containsKey(type) ? _ccNumLengths[type].reduce(max) : _DEFAULT_MAX_CARD_NUM_LENGTH;
+    int maxCardLength = _ccNumLengths.containsKey(type) ? _ccNumLengths[type]!.reduce(max) : _DEFAULT_MAX_CARD_NUM_LENGTH;
     String failedMessage = _DEFAULT_FAIL_MESSAGE;
 
     // Check if the card number length is viable.
     // If it is then decide the potential validity of this card number
     // The card number will be potentially valid if:
     //    The number is luhn valid OR the card number isn't complete yet
-    if (_ccNumLengths[type].contains(trimmedNumStr.length)) {
+    if (_ccNumLengths[type]!.contains(trimmedNumStr.length)) {
       isPotentiallyValid = isLuhnValid || trimmedNumStr.length < maxCardLength;
 
       if (isLuhnValid && isPotentiallyValid) {
-        failedMessage = null; // Not a failed validation
+        failedMessage = ''; // Not a failed validation
       }
 
       return CCNumValidationResults(
@@ -109,7 +109,7 @@ CCNumValidationResults validateCardNumber(String ccNumStr,
 
     bool potentialForMoreDigits = trimmedNumStr.length < maxCardLength;
     if (potentialForMoreDigits) {
-      failedMessage = null; // Not an failed validation since there could be more digits being typed in
+      failedMessage = ''; // Not an failed validation since there could be more digits being typed in
     }
     // Not a valid card but if the str passed in is 'incomplete' it is potentially valid
     // Incomplete means that the str passed in isn't as long as the max allowed card length
