@@ -12,7 +12,7 @@ String _DEFAULT_MONTH_FAIL_MESSAGE = 'Card has expired this year';
 
 /// Validates the card's expiration date based on the standard that no credit cards
 ValidationResults validateExpirationDate(String expDateStr) {
-  if (expDateStr == null || expDateStr.isEmpty) {
+  if (expDateStr.isEmpty) {
     return ValidationResults(
       isValid: false,
       isPotentiallyValid: false,
@@ -21,7 +21,7 @@ ValidationResults validateExpirationDate(String expDateStr) {
   }
 
   List<String> monthAndYear = _parseDate(expDateStr);
-  if (monthAndYear == null) {
+  if (monthAndYear.isEmpty) {
     return ValidationResults(
       isValid: false,
       isPotentiallyValid: false,
@@ -71,7 +71,7 @@ ValidationResults validateExpirationDate(String expDateStr) {
 }
 
 ExpYearValidationResults _validateExpYear(String expYearStr,
-    [int maxYearsInFuture]) {
+    [int? maxYearsInFuture]) {
 
   if (nonNumberRegex.hasMatch(expYearStr)) {
       return ExpYearValidationResults(
@@ -104,7 +104,7 @@ ExpYearValidationResults _validateExpYear(String expYearStr,
       isValid: false,
       isPotentiallyValid: firstTwoDigits == firstTwoDigitsCurrYear,
       expiresThisYear: false,
-      message: firstTwoDigits != firstTwoDigitsCurrYear ? 'Expiration year is 3 digits long' : null,
+      message: firstTwoDigits != firstTwoDigitsCurrYear ? 'Expiration year is 3 digits long' : '',
     );
   }
 
@@ -138,7 +138,7 @@ ExpYearValidationResults _validateExpYear(String expYearStr,
   }
 
   if (isValid) {
-    failedMessage = null;
+    failedMessage = '';
   }
 
   return ExpYearValidationResults(
@@ -168,7 +168,7 @@ ExpMonthValidationResults _validateExpMonth(String expMonthStr) {
   String failMessage = _DEFAULT_MONTH_FAIL_MESSAGE;
 
   if (isValid && isValidForThisYear) {
-    failMessage = null;
+    failMessage = '';
   }
 
   return ExpMonthValidationResults(
@@ -194,14 +194,14 @@ List<String> _parseDate(String expDateStr) {
   String formattedStr = expDateStr.replaceAll('-', '/')
     ..replaceAll(whiteSpaceRegex, '');
 
-  Match match = expDateFormat.firstMatch(formattedStr);
+  Match? match = expDateFormat.firstMatch(formattedStr);
   if (match != null) {
     print("matched! ${match[0]}");
   } else {
-    return null;
+    return [];
   }
 
-  List<String> monthAndYear = match[0].split('/');
+  List<String> monthAndYear = match[0]!.split('/');
 
   return monthAndYear;
 }

@@ -1,6 +1,9 @@
 ## Up next
 * "Validate" card holder name and postal codes
 
+## [2.0.0-nullsafety.0]
+* Initial null safety changes
+
 ## [1.2.0]
 * Card type parameter is now **required** when validating security codes
 * More cards supported:

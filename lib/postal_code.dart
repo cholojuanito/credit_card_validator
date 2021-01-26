@@ -10,7 +10,7 @@ import 'validation_results.dart';
 const int DEFAULT_MIN_POSTAL_CODE_LENGTH = 3;
 
 /// Checks if the postal code
-ValidationResults validatePostalCode(String postalCode, {int minLength}) {
+ValidationResults validatePostalCode(String postalCode, {int? minLength}) {
   // TODO implement
   throw UnimplementedError();
 }

@@ -17,9 +17,9 @@ class ValidationResults {
   String message;
 
   ValidationResults({
-    this.isValid,
-    this.isPotentiallyValid,
-    this.message,
+    required this.isValid,
+    required this.isPotentiallyValid,
+    this.message = '',
   });
 }
 
@@ -30,10 +30,10 @@ class CCNumValidationResults extends ValidationResults {
   CreditCardType ccType;
 
   CCNumValidationResults({
-    this.ccType,
-    bool isValid,
-    bool isPotentiallyValid,
-    String message,
+    required this.ccType,
+    required bool isValid,
+    required bool isPotentiallyValid,
+    String message = '',
   }) : super(
           isValid: isValid,
           isPotentiallyValid: isPotentiallyValid,
@@ -46,10 +46,10 @@ class ExpYearValidationResults extends ValidationResults {
   bool expiresThisYear;
 
   ExpYearValidationResults({
-    this.expiresThisYear,
-    bool isValid,
-    bool isPotentiallyValid,
-    String message,
+    required this.expiresThisYear,
+    required bool isValid,
+    required bool isPotentiallyValid,
+    String message = '',
   }) : super(
           isValid: isValid,
           isPotentiallyValid: isPotentiallyValid,
@@ -62,10 +62,10 @@ class ExpMonthValidationResults extends ValidationResults {
   bool isValidForCurrentYear;
 
   ExpMonthValidationResults({
-    this.isValidForCurrentYear,
-    bool isValid,
-    bool isPotentiallyValid,
-    String message,
+    required this.isValidForCurrentYear,
+    required bool isValid,
+    required bool isPotentiallyValid,
+    String message = '',
   }) : super(
           isValid: isValid,
           isPotentiallyValid: isPotentiallyValid,
