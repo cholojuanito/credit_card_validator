@@ -33,10 +33,9 @@ const int _DEFAULT_MAX_CARD_NUM_LENGTH = 19;
 /// Default string returned on a failed validation
 const String _DEFAULT_FAIL_MESSAGE = 'Invalid credit card number';
 
-/// Validates a credit card number that is passed in as a string
-/// Args:
-/// * `ccNumStr` (`String`): may have spaces or hyphens but no non-numeric characters
-/// * `luhnValidateUnionPay` (`bool`): determines if the UnionPay card's number should be checked for Luhn validity. 
+/// Validates a credit card number that is passed in as a string.
+/// 
+/// `luhnValidateUnionPay`: determines if this UnionPay card's number should be checked for Luhn validity. 
 ///  Default is to not check since some UnionPay cards do not use the Luhn algorithm.
 CCNumValidationResults validateCardNumber(String ccNumStr, 
   {bool luhnValidateUnionPay = false}) {

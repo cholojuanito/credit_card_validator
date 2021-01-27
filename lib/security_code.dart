@@ -6,15 +6,14 @@ import 'regexs.dart';
 /// Checks the validity of the CVV or security code for the credit card
 
 /// The default length of the CVV or security code (most cards do this)
-/// Set to 3
-const int DEFAULT_SECURITY_CODE_LENGTH = 3;
+const int _DEFAULT_SECURITY_CODE_LENGTH = 3;
 
 /// The alternate length of the security code (only American Express cards use this)
-/// Set to 4
-const int ALT_SECURITY_CODE_LENGTH = 4;
+const int _ALT_SECURITY_CODE_LENGTH = 4;
 
-/// Validates the card's security code based on the card type.
-  ///  Default is 3 digits but Amex is the only card provider with security codes that are 4 digits
+/// Validates the card's security code based allowed card type's length and whether it contains only numbers 
+/// 
+/// Default length is 3 digits but American Express uses security codes that are 4 digits long
   ValidationResults validateSecurityCode(String code, CreditCardType type ) {
     String trimmedCode = code.replaceAll(whiteSpaceRegex, '');
 
@@ -36,8 +35,8 @@ const int ALT_SECURITY_CODE_LENGTH = 4;
 
     // Set the correct security code length
     int expectedCodeLength = type == CreditCardType.amex
-        ? ALT_SECURITY_CODE_LENGTH
-        : DEFAULT_SECURITY_CODE_LENGTH;
+        ? _ALT_SECURITY_CODE_LENGTH
+        : _DEFAULT_SECURITY_CODE_LENGTH;
 
     if (trimmedCode.length < expectedCodeLength) {
       return ValidationResults(

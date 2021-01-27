@@ -10,7 +10,12 @@ const int _DEFAULT_NUM_YEARS_IN_FUTURE = 19;
 String _DEFAULT_YEAR_FAIL_MESSAGE = 'Card has expired';
 String _DEFAULT_MONTH_FAIL_MESSAGE = 'Card has expired this year';
 
-/// Validates the card's expiration date based on the standard that no credit cards
+/// Validates the card's expiration date 
+/// 
+/// The expiration date must be in one of the following date formats:
+/// * 'MM/YY'
+/// * 'MM/YYY'
+/// * 'MM/YYYY'
 ValidationResults validateExpirationDate(String expDateStr) {
   if (expDateStr.isEmpty) {
     return ValidationResults(
