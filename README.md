@@ -66,13 +66,6 @@ This package is based off of [Braintree's Credit Card Validator JS package](http
 Cholojuanito (Tanner Davis) - *Creator and repo owner* - [Github Profile](https://github.com/cholojuanito)
 
 # Support
-If you think this package is helpful, tell your friends, give it a star on GitHub, and a like on [pub.dev](https://pub.dev/packages/credit_card_type_detector)
-
-I also have a Patreon if you are feeling extra generous
-
-[![Patreon](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fwww.patreon.com%2Fapi%2Fcampaigns%2F6586046&query=data.attributes.patron_count&suffix=%20Patrons&color=FF5441&label=Patreon&logo=Patreon&logoColor)](https://patreon.com/cholojuanito)
-
-# Support
 If you think this package is helpful, tell your friends, give it a star on GitHub, and a like on [pub.dev](https://pub.dev/packages/credit_card_validator)
 
 [!["Buy Me A Pizza"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/cholojuanito)
