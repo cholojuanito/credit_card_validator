@@ -201,7 +201,6 @@ List<String> _parseDate(String expDateStr) {
 
   Match? match = expDateFormat.firstMatch(formattedStr);
   if (match != null) {
-    // print("matched! ${match[0]}");
     return match[0]!.split('/');
   } else {
     return [];
