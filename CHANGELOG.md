@@ -1,6 +1,9 @@
 ## Up next
 * "Validate" card holder name and postal codes
 
+## [2.0.1]
+* Reduced log output
+
 ## [2.0.0]
 * Official null safety support
 
