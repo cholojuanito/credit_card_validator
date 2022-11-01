@@ -3,20 +3,15 @@ A Dart package that validates credit card numbers, expiration dates, and securit
 
 This package should be used to quickly validate credit card data inputs and provide feedback to the user in your application's UI. It includes support for "potentially valid" inputs so that you can appropriately display the results to the user as they type.
 
-**Important: This package does not verify the information with the user's bank or credit company. Please use a payment processing service like Stripe or Braintree for true verification and validation of the user's payment info.**
+**Disclaimer: This package does not verify credit card information with the user's bank or credit company. Please use a payment processing service like Stripe or Braintree for true verification, validation, and processing of the user's payment info.**
 
 # Installing
-1. Add dependency to `pubspec.yaml`
+Add dependency to `pubspec.yaml`
 
-    *Get the current version in the 'Installing' tab on pub.dartlang.org*
+*Get the current version in the **Installing** tab on pub.dev*
 ```
 dependencies:
     credit_card_validator: *current-version*
-```
-
-2. Import the package
-```
-import 'package:credit_card_validator/credit_card_validator.dart';
 ```
 
 #  Usage
@@ -57,7 +52,7 @@ class CreditCardValidationBloc {
   * Hiper/Hipercard
 
 # Original Repo
-This package is based off of [Braintree's Credit Card Validator JS package](https://github.com/braintree/card-validator)
+This package is inspired by [Braintree's Credit Card Validator JS package](https://github.com/braintree/card-validator)
 
 # Related Repos
 * [Credit Card Type Detector - Cholojuanito GitHub](https://github.com/cholojuanito/credit_card_type_detector)
@@ -67,8 +62,6 @@ Cholojuanito (Tanner Davis) - *Creator and repo owner* - [Github Profile](https:
 
 # Support
 If you think this package is helpful, tell your friends, give it a star on GitHub, and a like on [pub.dev](https://pub.dev/packages/credit_card_validator)
-
-[!["Buy Me A Pizza"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/cholojuanito)
 
 # License
 This project is licensed under the MIT License - see the [LICENSE file](LICENSE) for more details
