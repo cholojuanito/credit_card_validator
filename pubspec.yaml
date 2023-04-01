@@ -9,7 +9,8 @@ environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
-  credit_card_type_detector: ^2.0.0
+  credit_card_type_detector: ^3.0.0
 
 dev_dependencies:
   test: ^1.17.8
+  intl: ^0.18.0
