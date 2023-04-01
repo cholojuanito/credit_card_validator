@@ -1,4 +1,4 @@
-import 'package:credit_card_type_detector/credit_card_type_detector.dart';
+import 'package:credit_card_type_detector/models.dart';
 
 import 'card_number.dart';
 import 'security_code.dart';
@@ -10,6 +10,8 @@ import 'expiration_date.dart';
 ///
 ///  Exposes 3 public functions which can be used to validate different parts of the credit card
 class CreditCardValidator {
+
+  static final CreditCardType unknownCardType = UNKNOWN_CARD_TYPE;
 
   /// Validates based on type of card, luhn validity & card number length
   CCNumValidationResults validateCCNum(String ccNumStr) {
