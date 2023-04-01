@@ -1,4 +1,4 @@
-import 'package:credit_card_type_detector/credit_card_type_detector.dart';
+import 'package:credit_card_type_detector/models.dart';
 import 'package:test/test.dart';
 import 'package:credit_card_validator/credit_card_validator.dart';
 import 'package:credit_card_validator/validation_results.dart';
@@ -23,37 +23,37 @@ void main() {
     test('full sequences', () {
       // All of these should be valid and potentially valid
       CCNumValidationResults results = validator.validateCCNum(visaCCNumFull);
-      expect(results.ccType, CreditCardType.visa);
+      expect(results.ccType, CreditCardType.visa());
       expect(results.isValid, true);
       expect(results.isPotentiallyValid, true);
 
       results = validator.validateCCNum(amexCCNumFull);
-      expect(results.ccType, CreditCardType.amex);
+      expect(results.ccType, CreditCardType.americanExpress());
       expect(results.isValid, true);
       expect(results.isPotentiallyValid, true);
       
       results = validator.validateCCNum(discoverCCNumFull);
-      expect(results.ccType, CreditCardType.discover);
+      expect(results.ccType, CreditCardType.discover());
       expect(results.isValid, true);
       expect(results.isPotentiallyValid, true);
 
       results = validator.validateCCNum(masterCardCCNumFull);
-      expect(results.ccType, CreditCardType.mastercard);
+      expect(results.ccType, CreditCardType.mastercard());
       expect(results.isValid, true);
       expect(results.isPotentiallyValid, true);
 
       results = validator.validateCCNum(jcbCCNumFull);
-      expect(results.ccType, CreditCardType.jcb);
+      expect(results.ccType, CreditCardType.jcb());
       expect(results.isValid, true);
       expect(results.isPotentiallyValid, true);
 
       results = validator.validateCCNum(unionPayCCNumFull);
-      expect(results.ccType, CreditCardType.unionpay);
+      expect(results.ccType, CreditCardType.unionPay());
       expect(results.isValid, true);
       expect(results.isPotentiallyValid, true);
 
       results = validator.validateCCNum(maestroCCNumFull);
-      expect(results.ccType, CreditCardType.maestro);
+      expect(results.ccType, CreditCardType.maestro());
       expect(results.isValid, true);
       expect(results.isPotentiallyValid, true);
     });
@@ -61,22 +61,22 @@ void main() {
     test('partial sequences', () {
       // All of these should not be valid but should be potentially valid
       CCNumValidationResults results = validator.validateCCNum(visaCCNumPartial);
-      expect(results.ccType, CreditCardType.visa);
+      expect(results.ccType, CreditCardType.visa());
       expect(results.isValid, false);
       expect(results.isPotentiallyValid, true);
 
       results = validator.validateCCNum(amexCCNumPartial);
-      expect(results.ccType, CreditCardType.amex);
+      expect(results.ccType, CreditCardType.americanExpress());
       expect(results.isValid, false);
       expect(results.isPotentiallyValid, true);
       
       results = validator.validateCCNum(discoverCCNumPartial);
-      expect(results.ccType, CreditCardType.discover);
+      expect(results.ccType, CreditCardType.discover());
       expect(results.isValid, false);
       expect(results.isPotentiallyValid, true);
       
       results = validator.validateCCNum(masterCardCCNumPartial);
-      expect(results.ccType, CreditCardType.mastercard);
+      expect(results.ccType, CreditCardType.mastercard());
       expect(results.isValid, false);
       expect(results.isPotentiallyValid, true);
     });
@@ -101,14 +101,14 @@ void main() {
 
     test('alphabetic characters', () {
       CCNumValidationResults results = validator.validateCCNum(alpha);
-      expect(results.ccType, CreditCardType.unknown);
+      expect(results.ccType, CreditCardValidator.unknownCardType);
       expect(results.isValid, false);
       expect(results.isPotentiallyValid, false); 
     });
 
     test('symbols', () {
       CCNumValidationResults results = validator.validateCCNum(symbols);
-      expect(results.ccType, CreditCardType.unknown);
+      expect(results.ccType, CreditCardValidator.unknownCardType);
       expect(results.isValid, false);
       expect(results.isPotentiallyValid, false);  
     });
@@ -139,7 +139,7 @@ void main() {
     final String empty = '';
     test('empty string', () {
       CCNumValidationResults results = validator.validateCCNum(empty);
-      expect(results.ccType, CreditCardType.unknown);
+      expect(results.ccType, CreditCardValidator.unknownCardType);
       expect(results.isValid, false);
       expect(results.isPotentiallyValid, false); 
       
