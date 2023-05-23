@@ -37,8 +37,10 @@ class CreditCardValidationBloc {
 
 ```
 
+If multiple card types are detected then the returned message will include the list of conflicting cards. You can then edit/remove the cards as needed using the API available in `credit_card_type_detector`
+
 # Features
-* Supported cards:
+* Default supported cards:
   * Visa
   * Mastercard
   * American Express
@@ -50,12 +52,13 @@ class CreditCardValidationBloc {
   * Mir
   * Elo
   * Hiper/Hipercard
+* Custom defined credit cards
 
-# Original Repo
+# Inspiration Repo
 This package is inspired by [Braintree's Credit Card Validator JS package](https://github.com/braintree/card-validator)
 
 # Related Repos
-* [Credit Card Type Detector - Cholojuanito GitHub](https://github.com/cholojuanito/credit_card_type_detector)
+* [Credit Card Type Detector - GitHub](https://github.com/cholojuanito/credit_card_type_detector)
 
 # Author
 Cholojuanito (Tanner Davis) - *Creator and repo owner* - [Github Profile](https://github.com/cholojuanito)

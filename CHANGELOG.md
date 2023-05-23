@@ -1,6 +1,9 @@
 ## Up next
 * "Validate" card holder name and postal codes
 
+## [2.1.0] - 22 May 2023
+* **Support for validating custom credit card types**
+
 ## [2.0.1]
 * Reduced log output
 
