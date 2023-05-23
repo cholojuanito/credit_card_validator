@@ -62,7 +62,7 @@ CCNumValidationResults validateCardNumber(String ccNumStr,
         ccType: UNKNOWN_CARD_TYPE,
         isValid: false,
         isPotentiallyValid: true,
-        message: 'Multiple card types detected',
+        message: 'Multiple card types detected: [${types.map((e) => e.prettyType).join(", ")}]',
       );
     }
 
