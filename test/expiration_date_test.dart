@@ -1,5 +1,6 @@
 import 'package:credit_card_validator/credit_card_validator.dart';
 import 'package:credit_card_validator/validation_results.dart';
+import 'package:intl/intl.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -96,7 +97,7 @@ void main() {
   });
 
   group('Full dates', () {
-    final String good = '04/23'; // TODO make date programmatically
+    final String good = DateFormat('MM/yy').format(DateTime.now().add(Duration(days: 365)));
     final String expired = '04/20';
     test('good', () {
       ValidationResults results = validator.validateExpDate(good);
@@ -121,7 +122,7 @@ void main() {
   });
 
   group('Formatting', () {
-    final String hyphens = '04-22'; // TODO make date programmatically
+    final String hyphens = DateFormat('MM-yy').format(DateTime.now().add(Duration(days: 365))); // TODO make date programmatically
     test('hyphens', () {
       ValidationResults results = validator.validateExpDate(hyphens);
       expect(results.isValid, true);

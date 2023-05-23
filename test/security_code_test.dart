@@ -1,13 +1,13 @@
-import 'package:credit_card_type_detector/credit_card_type_detector.dart';
+import 'package:credit_card_type_detector/models.dart';
 import 'package:test/test.dart';
 import 'package:credit_card_validator/credit_card_validator.dart';
 import 'package:credit_card_validator/validation_results.dart';
 
 void main() {
   final CreditCardValidator validator = CreditCardValidator();
-  final CreditCardType amex = CreditCardType.amex;
-  final CreditCardType other1 = CreditCardType.visa;
-  final CreditCardType other2 = CreditCardType.discover;
+  final CreditCardType amex = CreditCardType.americanExpress();
+  final CreditCardType other1 = CreditCardType.visa();
+  final CreditCardType other2 = CreditCardType.discover();
   final String cvv4Digits = '1234';
   final String cvv3Digits = '123';
   final String cvv5Digits = '12345';

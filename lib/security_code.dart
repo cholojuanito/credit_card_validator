@@ -1,4 +1,4 @@
-import 'package:credit_card_type_detector/credit_card_type_detector.dart';
+import 'package:credit_card_type_detector/models.dart';
 import 'package:credit_card_validator/validation_results.dart';
 
 import 'regexs.dart';
@@ -34,7 +34,7 @@ const int _ALT_SECURITY_CODE_LENGTH = 4;
     }
 
     // Set the correct security code length
-    int expectedCodeLength = type == CreditCardType.amex
+    int expectedCodeLength = type == CreditCardType.americanExpress()
         ? _ALT_SECURITY_CODE_LENGTH
         : _DEFAULT_SECURITY_CODE_LENGTH;
 

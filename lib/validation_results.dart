@@ -1,4 +1,4 @@
-import 'package:credit_card_type_detector/credit_card_type_detector.dart';
+import 'package:credit_card_type_detector/models.dart';
 
 /// A class that contains the results from a validation process.
 /// Each of the parts of the credit card are either `valid` or `potentially valid`
