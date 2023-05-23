@@ -10,12 +10,17 @@ import 'expiration_date.dart';
 ///
 ///  Exposes 3 public functions which can be used to validate different parts of the credit card
 class CreditCardValidator {
-
   static final CreditCardType unknownCardType = UNKNOWN_CARD_TYPE;
 
   /// Validates based on type of card, luhn validity & card number length
-  CCNumValidationResults validateCCNum(String ccNumStr) {
-    return validateCardNumber(ccNumStr.trim());
+  CCNumValidationResults validateCCNum(
+    String ccNumStr, {
+    bool luhnValidateUnionPay = false,
+    bool ignoreLuhnValidation = false,
+  }) {
+    return validateCardNumber(ccNumStr.trim(),
+        luhnValidateUnionPay: luhnValidateUnionPay,
+        ignoreLuhnValidation: ignoreLuhnValidation);
   }
 
   /// Validates the card's expiration date based on the date being a valid string & not expiring more
@@ -28,5 +33,4 @@ class CreditCardValidator {
   ValidationResults validateCVV(String cvv, CreditCardType cardType) {
     return validateSecurityCode(cvv.trim(), cardType);
   }
-
 }

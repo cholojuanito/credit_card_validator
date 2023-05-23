@@ -32,8 +32,10 @@ final CreditCardType UNKNOWN_CARD_TYPE = CreditCardType(
 /// 
 /// `luhnValidateUnionPay`: determines if this UnionPay card's number should be checked for Luhn validity. 
 ///  Default is to not check since some UnionPay cards do not use the Luhn algorithm.
-CCNumValidationResults validateCardNumber(String ccNumStr, 
-  {bool luhnValidateUnionPay = false}) {
+CCNumValidationResults validateCardNumber(String ccNumStr, {
+  bool luhnValidateUnionPay = false, 
+  bool ignoreLuhnValidation = false,
+}) {
     // Replace any whitespace or hyphens
     String trimmedNumStr = ccNumStr.replaceAll(whiteSpaceRegex, '');
 
@@ -69,27 +71,19 @@ CCNumValidationResults validateCardNumber(String ccNumStr,
     CreditCardType type = types[0];
     int maxCardLength = type.lengths.reduce(max);
 
-    // Card number is longer than the industry standard of 19. Not valid nor potentially valid
-    if (trimmedNumStr.length > _DEFAULT_MAX_CARD_NUM_LENGTH) {
-      return CCNumValidationResults(
-        ccType: type,
-        isValid: false,
-        isPotentiallyValid: false,
-        message: 'Card number is greater than 19 digits',
-      );
-    }
-
     bool isLuhnValid = false;
     bool isPotentiallyValid = false;
-
-    // Check Luhn validity of the number if the conditions are met, usually Luhn validity is checked
-    if (types.contains(CreditCardType.unionPay()) && luhnValidateUnionPay == false) {
+    if (ignoreLuhnValidation) {
       isLuhnValid = true;
-    } else { 
-      isLuhnValid = checkLuhnValidity(trimmedNumStr);
     }
-
-
+    else {
+        // Check Luhn validity of the number if the conditions are met, usually Luhn validity is checked
+      if (types.contains(CreditCardType.unionPay()) && luhnValidateUnionPay == false) {
+        isLuhnValid = true;
+      } else { 
+        isLuhnValid = checkLuhnValidity(trimmedNumStr);
+      }
+    }
     
     String failedMessage = _DEFAULT_FAIL_MESSAGE;
 
