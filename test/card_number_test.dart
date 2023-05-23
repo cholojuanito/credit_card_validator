@@ -1,4 +1,7 @@
+import 'package:credit_card_type_detector/constants.dart';
+import 'package:credit_card_type_detector/credit_card_type_detector.dart';
 import 'package:credit_card_type_detector/models.dart';
+import 'package:credit_card_validator/card_number.dart';
 import 'package:test/test.dart';
 import 'package:credit_card_validator/credit_card_validator.dart';
 import 'package:credit_card_validator/validation_results.dart';
@@ -18,6 +21,48 @@ void main() {
   final String masterCardCCNumPartial = "528719";
 
   final CreditCardValidator validator = CreditCardValidator();
+
+  final CreditCardType someMadeUpCardType = CreditCardType(
+    'mycard',
+    'MyCard',
+    [16, 17, 18],
+    {
+      Pattern(['1']),
+      Pattern(['2']),
+      Pattern(['999']),
+    },
+    SecurityCode.cid4(),
+  );
+
+  final CreditCardType modifiedVisa = CreditCardType(
+    TYPE_VISA,
+    PRETTY_VISA,
+    [16], // only length 16
+    {
+      Pattern(['3'])
+    },
+    SecurityCode.cvv(),
+  );
+
+  // Conflicts with typical Visa card
+  final CreditCardType conflictingCardType = CreditCardType(
+    'conflict',
+    'Conflict',
+    [16], // only length 16
+    {
+      Pattern(['4'])
+    },
+    SecurityCode.cvv(),
+  );
+
+  final String someMadeUpCCNumFull = "9999 6614 3472 7891";
+  final String someMadeUpCCNumPartial = "9999 6614 3472";
+  final String modifiedVisaCCNumFull = "3538243039991295";
+  final String modifiedVisaCCNumPartial = "353824303";
+
+  setUp(() {
+    resetCardTypes();
+  });
 
   group('Card number sequences', () {
     test('full sequences', () {
@@ -82,6 +127,36 @@ void main() {
     });
   });
 
+  group('Custom card numbers', () {
+    test('custom cards', () {
+      addCardType(someMadeUpCardType.type, someMadeUpCardType);
+      CCNumValidationResults results = validator.validateCCNum(someMadeUpCCNumFull, ignoreLuhnValidation: true);
+      expect(results.ccType, someMadeUpCardType);
+      expect(results.isValid, true);
+      expect(results.isPotentiallyValid, true);
+
+      results = validator.validateCCNum(someMadeUpCCNumPartial);
+      expect(results.ccType, someMadeUpCardType);
+      expect(results.isValid, false);
+      expect(results.isPotentiallyValid, true);
+
+    });
+
+    test('modified existing card: conflicts with other card types', () {
+      updateCardType(modifiedVisa.type, modifiedVisa);
+      CCNumValidationResults results = validator.validateCCNum(modifiedVisaCCNumFull);
+      expect(results.ccType, UNKNOWN_CARD_TYPE);
+      expect(results.isValid, false);
+      expect(results.isPotentiallyValid, true);
+
+      results = validator.validateCCNum(modifiedVisaCCNumPartial);
+      expect(results.ccType, UNKNOWN_CARD_TYPE);
+      expect(results.isValid, false);
+      expect(results.isPotentiallyValid, true);
+    });
+
+  });
+
   group('Formatting', () {
     final String hyphens = "4647-7200-6779-1032";
     final String whiteSpace = "4647 7200 6779 1032";
@@ -115,25 +190,23 @@ void main() {
 
   });
   
-  // TODO specifically check luhn valid and invalid numbers
-  // group('Luhn validity', () {
-  //   test('valid numbers', () {
-      
-  //   });
+  group('UnionPay (Luhn validity)', () {
 
-  //   test('invalid numbers', () {
-
-  //   });
-
-  //   test('union pay (default)', () {
-
-  //   });
+    test('default: card is valid, don\'t check luhn validity', () {
+      CCNumValidationResults results = validator.validateCCNum(unionPayCCNumFull);
+      expect(results.ccType, CreditCardType.unionPay());
+      expect(results.isValid, true);
+      expect(results.isPotentiallyValid, true); 
+    });
     
-  //   test('union pay (override luhn check)', () {
+    test('card is invalid with luhn validity check', () {
+      CCNumValidationResults results = validator.validateCCNum(unionPayCCNumFull, luhnValidateUnionPay: true);
+      expect(results.ccType, CreditCardType.unionPay());
+      expect(results.isValid, false);
+      expect(results.isPotentiallyValid, true); 
+    });
 
-  //   });
-
-  // });
+  });
 
   group('Edge cases', () {
     final String empty = '';
@@ -143,6 +216,15 @@ void main() {
       expect(results.isValid, false);
       expect(results.isPotentiallyValid, false); 
       
+    });
+
+    test('ignoreLuhnValidity overrides luhnValidateUnionPay', () {
+      CCNumValidationResults results = validator.validateCCNum(unionPayCCNumFull, 
+      luhnValidateUnionPay: true,
+      ignoreLuhnValidation: true);
+      expect(results.ccType, CreditCardType.unionPay());
+      expect(results.isValid, true);
+      expect(results.isPotentiallyValid, true); 
     });
 
   });
