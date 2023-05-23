@@ -44,17 +44,6 @@ void main() {
     SecurityCode.cvv(),
   );
 
-  // Conflicts with typical Visa card
-  final CreditCardType conflictingCardType = CreditCardType(
-    'conflict',
-    'Conflict',
-    [16], // only length 16
-    {
-      Pattern(['4'])
-    },
-    SecurityCode.cvv(),
-  );
-
   final String someMadeUpCCNumFull = "9999 6614 3472 7891";
   final String someMadeUpCCNumPartial = "9999 6614 3472";
   final String modifiedVisaCCNumFull = "3538243039991295";

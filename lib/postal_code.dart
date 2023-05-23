@@ -7,7 +7,7 @@ import 'validation_results.dart';
 /// service like Stripe or Braintree for that.
 
 /// The default minimum postal code string length. Set to 3
-const int _DEFAULT_MIN_POSTAL_CODE_LENGTH = 3;
+// const int _DEFAULT_MIN_POSTAL_CODE_LENGTH = 3;
 
 /// Checks if the postal code seems legit
 ValidationResults validatePostalCode(String postalCode, {int? minLength}) {

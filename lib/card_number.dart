@@ -10,9 +10,6 @@ import 'validation_results.dart';
 /// Validates the credit card number and determines
 /// the credit card type as well
 
-/// The default card number length. Set to 19
-const int _DEFAULT_MAX_CARD_NUM_LENGTH = 19;
-
 /// Default string returned on a failed validation
 const String _DEFAULT_FAIL_MESSAGE = 'Invalid credit card number';
 
